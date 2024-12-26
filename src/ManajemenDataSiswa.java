@@ -179,5 +179,152 @@ public class ManajemenDataSiswa {
     }
 
 
+    private void tambahSiswa(ActionEvent e) {
+        try {
 
+            String nis = JOptionPane.showInputDialog(frame, "Masukkan NIS Siswa:");
+            if (nis == null || nis.trim().isEmpty()) throw new IllegalArgumentException("NIS tidak boleh kosong!");
+
+            if (!nis.matches("\\d+")) {
+                throw new IllegalArgumentException("NIS harus berupa angka!");
+            }
+
+            // Input Nama
+            String nama = JOptionPane.showInputDialog(frame, "Masukkan Nama Siswa:");
+            if (nama == null || nama.trim().isEmpty()) throw new IllegalArgumentException("Nama tidak boleh kosong!");
+
+            // Input Kelas
+            String kelas = JOptionPane.showInputDialog(frame, "Masukkan Kelas Siswa:");
+            if (kelas == null || kelas.trim().isEmpty()) throw new IllegalArgumentException("Kelas tidak boleh kosong!");
+
+
+            JPanel datePanel = new JPanel(new BorderLayout());
+            JLabel dateLabel = new JLabel("Pilih Tanggal Lahir:");
+            JDateChooser dateChooser = new JDateChooser();
+            dateChooser.setDateFormatString("dd-MM-yyyy");
+            datePanel.add(dateLabel, BorderLayout.NORTH);
+            datePanel.add(dateChooser, BorderLayout.CENTER);
+
+            int option = JOptionPane.showConfirmDialog(frame, datePanel, "Tanggal Lahir", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+            if (option != JOptionPane.OK_OPTION || dateChooser.getDate() == null) {
+                throw new IllegalArgumentException("Tanggal Lahir harus dipilih!");
+            }
+            String tanggalLahir = new SimpleDateFormat("dd-MM-yyyy").format(dateChooser.getDate());
+
+            // Input Status
+            String status = JOptionPane.showInputDialog(frame, "Masukkan Status Siswa:");
+            if (status == null || status.trim().isEmpty()) throw new IllegalArgumentException("Status tidak boleh kosong!");
+
+            // Menambahkan data ke list siswa
+            siswaData.add(new String[]{nis, nama, kelas, tanggalLahir, status});
+            JOptionPane.showMessageDialog(frame, "Data siswa berhasil ditambahkan!");
+
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(frame, ex.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(frame, "Terjadi kesalahan: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void hapusSiswa(ActionEvent e) {
+        try {
+            String nis = JOptionPane.showInputDialog(frame, "Masukkan NIS siswa yang ingin dihapus:");
+
+            if (nis == null || nis.trim().isEmpty()) {
+                throw new IllegalArgumentException("NIS tidak boleh kosong!");
+            }
+
+
+            if (!nis.matches("\\d+")) {
+                throw new IllegalArgumentException("NIS harus berupa angka!");
+            }
+
+            boolean found = siswaData.removeIf(siswa -> siswa[0].equals(nis));
+
+            if (found) {
+                JOptionPane.showMessageDialog(frame, "Data siswa berhasil dihapus!");
+            } else {
+                throw new IllegalArgumentException("Data siswa dengan NIS " + nis + " tidak ditemukan.");
+            }
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(frame, ex.getMessage(), "Hapus Gagal", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(frame, "Terjadi kesalahan saat menghapus data siswa.", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }
+
+    private void updateSiswa(ActionEvent e) {
+        try {
+            String nis = JOptionPane.showInputDialog(frame, "Masukkan NIS siswa yang ingin diupdate:");
+
+            if (nis == null) {
+                throw new IllegalArgumentException("NIS tidak boleh kosong!");
+            }
+
+            boolean found = false;
+            for (String[] siswa : siswaData) {
+                if (siswa[0].equals(nis)) {
+                    found = true;
+                    // Prompt for new data
+                    String newNama = JOptionPane.showInputDialog(frame, "Masukkan Nama baru:", siswa[1]);
+                    String newKelas = JOptionPane.showInputDialog(frame, "Masukkan Kelas baru:", siswa[2]);
+                    String newStatus = JOptionPane.showInputDialog(frame, "Masukkan Status baru:", siswa[4]);
+
+                    siswa[1] = newNama;
+                    siswa[2] = newKelas;
+                    siswa[4] = newStatus;
+
+                    JOptionPane.showMessageDialog(frame, "Data siswa berhasil diupdate!");
+                    break;
+                }
+            }
+
+            if (!found) {
+                throw new IllegalArgumentException("Data siswa dengan NIS " + nis + " tidak ditemukan.");
+            }
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(frame, ex.getMessage(), "Update Gagal", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(frame, "Terjadi kesalahan saat mengupdate data siswa.", "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }
+
+    private void tampilkanData(ActionEvent e) {
+
+        String[] columnNames = {"No", "NIS", "Nama", "Kelas", "Tanggal Lahir", "Status"};
+
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+        int nomor = 1;
+        for (String[] siswa : siswaData) {
+            String[] rowData = new String[siswa.length + 1];
+            rowData[0] = String.valueOf(nomor);
+            System.arraycopy(siswa, 0, rowData, 1, siswa.length);
+            model.addRow(rowData);
+            nomor++;
+        }
+
+
+        JTable table = new JTable(model);
+        table.setFillsViewportHeight(true);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(700, 500));
+
+        JOptionPane.showMessageDialog(frame, scrollPane, "Data Siswa", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void keluar(ActionEvent e) {
+        int confirmation = JOptionPane.showConfirmDialog(frame, "Apakah Anda yakin ingin keluar?", "Konfirmasi Keluar", JOptionPane.YES_NO_OPTION);
+        if (confirmation == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(ManajemenDataSiswa::new);
+    }
 }
