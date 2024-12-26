@@ -56,7 +56,7 @@ Aplikasi ini bertujuan untuk memanajemen serta mengelola data siswa agar lebih t
 - Mengonfirmasi keluar dari aplikasi.
 
 
-## Pe
+## Pemrogram
 Aplikasi ini dibuat oleh Mahasiswa Program Studi Informatika Universitas Muhammadiyah Malang
 dengan Identitas :
 
