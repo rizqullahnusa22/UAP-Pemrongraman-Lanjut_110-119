@@ -15,6 +15,7 @@ public class ManajemenDataSiswaTest {
         manajemenDataSiswa = new ManajemenDataSiswa();
     }
 
+
     @Test
     public void testLoginValid() {
         manajemenDataSiswa.usernameField.setText("admin");
