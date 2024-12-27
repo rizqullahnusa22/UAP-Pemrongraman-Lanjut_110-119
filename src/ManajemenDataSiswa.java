@@ -203,11 +203,9 @@ public class ManajemenDataSiswa {
                 throw new IllegalArgumentException("NIS harus berupa angka!");
             }
 
-            // Input Nama
             String nama = JOptionPane.showInputDialog(frame, "Masukkan Nama Siswa:");
             if (nama == null || nama.trim().isEmpty()) throw new IllegalArgumentException("Nama tidak boleh kosong!");
 
-            // Input Kelas
             String kelas = JOptionPane.showInputDialog(frame, "Masukkan Kelas Siswa:");
             if (kelas == null || kelas.trim().isEmpty()) throw new IllegalArgumentException("Kelas tidak boleh kosong!");
 
@@ -230,7 +228,7 @@ public class ManajemenDataSiswa {
             String status = JOptionPane.showInputDialog(frame, "Masukkan Status Siswa:");
             if (status == null || status.trim().isEmpty()) throw new IllegalArgumentException("Status tidak boleh kosong!");
 
-            // Menambahkan data ke list siswa
+
             siswaData.add(new String[]{nis, nama, kelas, tanggalLahir, status});
             JOptionPane.showMessageDialog(frame, "Data siswa berhasil ditambahkan!");
 
@@ -282,7 +280,7 @@ public class ManajemenDataSiswa {
         try {
             String nis = JOptionPane.showInputDialog(frame, "Masukkan NIS siswa yang ingin diupdate:");
 
-            if (nis == null) {
+            if (nis == null || nis.trim().isEmpty()) {
                 throw new IllegalArgumentException("NIS tidak boleh kosong!");
             }
 
@@ -290,13 +288,37 @@ public class ManajemenDataSiswa {
             for (String[] siswa : siswaData) {
                 if (siswa[0].equals(nis)) {
                     found = true;
-                    // Prompt for new data
+
                     String newNama = JOptionPane.showInputDialog(frame, "Masukkan Nama baru:", siswa[1]);
                     String newKelas = JOptionPane.showInputDialog(frame, "Masukkan Kelas baru:", siswa[2]);
                     String newStatus = JOptionPane.showInputDialog(frame, "Masukkan Status baru:", siswa[4]);
 
+                    JPanel datePanel = new JPanel(new BorderLayout());
+                    JLabel dateLabel = new JLabel("Pilih Tanggal Lahir Baru:");
+                    JDateChooser dateChooser = new JDateChooser();
+                    dateChooser.setDateFormatString("dd-MM-yyyy");
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                    try {
+                        dateChooser.setDate(dateFormat.parse(siswa[3]));
+                    } catch (Exception ex) {
+                        dateChooser.setDate(null);
+                    }
+
+                    datePanel.add(dateLabel, BorderLayout.NORTH);
+                    datePanel.add(dateChooser, BorderLayout.CENTER);
+
+                    int option = JOptionPane.showConfirmDialog(frame, datePanel, "Tanggal Lahir Baru", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+                    if (option != JOptionPane.OK_OPTION || dateChooser.getDate() == null) {
+                        throw new IllegalArgumentException("Tanggal Lahir baru harus dipilih!");
+                    }
+
+                    String newTanggalLahir = dateFormat.format(dateChooser.getDate());
+
                     siswa[1] = newNama;
                     siswa[2] = newKelas;
+                    siswa[3] = newTanggalLahir;
                     siswa[4] = newStatus;
 
                     JOptionPane.showMessageDialog(frame, "Data siswa berhasil diupdate!");
@@ -314,7 +336,6 @@ public class ManajemenDataSiswa {
             ex.printStackTrace();
         }
     }
-
     /**
      *
      * @param e
@@ -343,7 +364,6 @@ public class ManajemenDataSiswa {
 
         JOptionPane.showMessageDialog(frame, scrollPane, "Data Siswa", JOptionPane.INFORMATION_MESSAGE);
     }
-
     /**
      *
      * @param e
