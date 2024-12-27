@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import com.toedter.calendar.JDateChooser;
 
+
 public class ManajemenDataSiswa {
     private JFrame frame;
     private JPanel loginPanel;
@@ -139,9 +140,19 @@ public class ManajemenDataSiswa {
         frame.setVisible(true);
     }
 
+    /**
+     *
+     * @param button
+     */
     private void setButtonStyle(JButton button) {
         setButtonStyle(button, button.getBackground());
     }
+
+    /**
+     *
+     * @param button
+     * @param color
+     */
 
     private void setButtonStyle(JButton button, Color color) {
         button.setFocusPainted(false);
@@ -164,7 +175,6 @@ public class ManajemenDataSiswa {
             }
         });
 
-
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -178,6 +188,10 @@ public class ManajemenDataSiswa {
         });
     }
 
+    /**
+     *
+     * @param e
+     */
 
     private void tambahSiswa(ActionEvent e) {
         try {
@@ -227,6 +241,10 @@ public class ManajemenDataSiswa {
         }
     }
 
+    /**
+     *
+     * @param e
+     */
     private void hapusSiswa(ActionEvent e) {
         try {
             String nis = JOptionPane.showInputDialog(frame, "Masukkan NIS siswa yang ingin dihapus:");
@@ -254,6 +272,11 @@ public class ManajemenDataSiswa {
             ex.printStackTrace();
         }
     }
+
+    /**
+     *
+     * @param e
+     */
 
     private void updateSiswa(ActionEvent e) {
         try {
@@ -292,6 +315,10 @@ public class ManajemenDataSiswa {
         }
     }
 
+    /**
+     *
+     * @param e
+     */
     private void tampilkanData(ActionEvent e) {
 
         String[] columnNames = {"No", "NIS", "Nama", "Kelas", "Tanggal Lahir", "Status"};
@@ -317,6 +344,10 @@ public class ManajemenDataSiswa {
         JOptionPane.showMessageDialog(frame, scrollPane, "Data Siswa", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     *
+     * @param e
+     */
     private void keluar(ActionEvent e) {
         int confirmation = JOptionPane.showConfirmDialog(frame, "Apakah Anda yakin ingin keluar?", "Konfirmasi Keluar", JOptionPane.YES_NO_OPTION);
         if (confirmation == JOptionPane.YES_OPTION) {
@@ -324,6 +355,10 @@ public class ManajemenDataSiswa {
         }
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(ManajemenDataSiswa::new);
     }
